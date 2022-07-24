@@ -1,2 +1,2 @@
 # Sebastian-boy
-This is a small game develop using plain HTML, CSS, and JavaScript no framework.
+This is a simple game created to experiment with PixiJS game development using HTML, CSS, and JavaScript.
