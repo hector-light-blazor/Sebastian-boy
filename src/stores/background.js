@@ -5,7 +5,6 @@ import BG from "@/assets/stages/bg_global.png"
 export const useBackgroundStore = defineStore({
   id: 'background',
   state: () => ({
-    default: "~/assets/stages/bg_global.png",
     background: PIXI.Sprite.from(BG),
     size: 60
   }),
@@ -13,8 +12,11 @@ export const useBackgroundStore = defineStore({
     GetBackGround: (state) => state.background
   },
   actions: {
-    Setup() {
-        this.background = PIXI.Sprite.from(this.default)
+    Setup(app) {
+        this.background = PIXI.Sprite.from(BG)
+      
+        //this.background.width = app.width;
+        // this.background.height = app.height;
       }
   }
 })
