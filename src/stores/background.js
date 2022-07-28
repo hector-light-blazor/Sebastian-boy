@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import * as PIXI from 'pixi.js'
 import BG from "@/assets/stages/bg_global.png"
+import BG2 from "@/assets/players/explosion1.png"
+
 
 export const useBackgroundStore = defineStore({
   id: 'background',
@@ -15,8 +17,8 @@ export const useBackgroundStore = defineStore({
     Setup(app) {
         this.background = PIXI.Sprite.from(BG)
       
-        //this.background.width = app.width;
-        // this.background.height = app.height;
+        // this.background.width = app.screen.width;
+        // this.background.height = app.screen.height;
       }
   }
 })

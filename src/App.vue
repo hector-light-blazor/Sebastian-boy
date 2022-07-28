@@ -1,25 +1,14 @@
 <script setup>
 import { RouterView } from 'vue-router'
-import { useEngineStore } from '@/stores/engine'
-import * as PIXI from 'pixi.js'
+// // Resize function window
+// const resize = () => {
+//    // Resize the renderer
+// 	app.GetApplication.renderer.resize(window.innerWidth, window.innerHeight);
+// }
 
-
-const app = useEngineStore();
-app.SetupEngine();
-
-document.body.appendChild(app.GetView);
-
-
-
-// Resize function window
-const resize = () => {
-   // Resize the renderer
-	app.GetApplication.renderer.resize(window.innerWidth, window.innerHeight);
-}
-
-   // Listen for window resize events
-   window.addEventListener('resize', resize);
-resize();
+//    // Listen for window resize events
+//    window.addEventListener('resize', resize);
+// resize();
 
 
 

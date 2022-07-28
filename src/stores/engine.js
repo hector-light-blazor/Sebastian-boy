@@ -14,7 +14,8 @@ export const useEngineStore = defineStore({
   actions: {
     SetupEngine() {
             this._application = new PIXI.Application({
-                autoResize: true,
+              width: window.innerWidth - 140,
+              height: 700,
               resolution: devicePixelRatio 
             });
     }

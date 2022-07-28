@@ -2,8 +2,7 @@ import { defineStore } from 'pinia'
 import * as PIXI from 'pixi.js'
 import player from "@/assets/players/rockets.png"
 import astone from "@/assets/players/astone.gif"
-import astthree from "@/assets/players/astthree.gif"
-import asttwo from "@/assets/players/asttwo.gif"
+import sun from "@/assets/players/sun.png"
 
 export const usePlayerStore = defineStore({
   id: 'player',
@@ -12,14 +11,16 @@ export const usePlayerStore = defineStore({
     bad: '❤',
     hearts: [],
     enemies: [],
-    player: PIXI.Sprite.from(player),
+    player: new PIXI.Sprite.from(player),
+    planet: new PIXI.Sprite.from(sun),
     _playerSize: 60,
     _enemySize: 100
   }),
   getters: {
     GetLife: (state) => state.hearts,
     GetPlayer: (state) => state.player,
-    GetEnemies: (state) => state.enemies
+    GetEnemies: (state) => state.enemies,
+    GetPlanet: (state) => state.planet
   },
   actions: {
     SetupSize(app) {
@@ -32,7 +33,18 @@ export const usePlayerStore = defineStore({
        // Configuration:
        // X AND Y Position: Move the Ship to center below...
        this.player.x = app.screen.width / 2;
-       this.player.y = app.screen.height - (this.player.height - 15);
+       this.player.y = app.screen.height - (this.player.height + 80);
+    },
+    SetupPlanet(app){
+       this.planet.anchor.set(0.5, 0.5);
+       this.planet.width = 100;
+       this.planet.height = 100;
+
+       // Configuration:
+       // X AND Y Position: Move the Ship to center below...
+       this.planet.x = app.screen.width / 2;
+       this.planet.y = app.screen.height - (this.planet.height - 15);
+
     },
     SetupEnimies(size, appWidth){
       for(var i = 0; i < size; i++){

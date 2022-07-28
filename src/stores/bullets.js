@@ -11,6 +11,7 @@ export const useBulletsStore = defineStore({
   },
   actions: {
     DrawBullets(x, y, size) {
+        var found = false;
         //3.) Create a Bullet Graphics...
         var BulletGraphics = new PIXI.Graphics();
 
@@ -20,9 +21,33 @@ export const useBulletsStore = defineStore({
         BulletGraphics.drawCircle(x, y, size);
         BulletGraphics.endFill();
 
-        this._bullets.push(BulletGraphics);
 
-        return BulletGraphics;
+        //Need to make sure it doesnt intersect with another bullet..
+        for(var i = 0; i < this._bullets.length; i++){
+            let cBox = BulletGraphics.getBounds();
+            let lBox = this._bullets[i].getBounds();
+            if(this.rectIntersect(cBox, lBox)){
+              found = true; 
+              break;
+            }
+
+        }
+        if(!found){
+          this._bullets.push(BulletGraphics);
+
+          return BulletGraphics;
+        }
+
+        return null;
+       
+    },
+    rectIntersect(box1, box2){
+      let aBox = box1;
+      let bBox = box2;
+      return aBox.x + aBox.width > bBox.x &&
+             aBox.x < bBox.x + bBox.width &&
+             aBox.y + aBox.height > bBox.y &&
+             aBox.y < bBox.y + bBox.height;
     }
   }
 })
