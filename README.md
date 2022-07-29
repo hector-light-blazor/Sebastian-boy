@@ -1,7 +1,6 @@
 # sebastian-boy2022
 
-This is a small project of recreating the game I developed during my undergraduate years. My final exam for Java was to built a game.
-I decided to recreate this game using web technologies and using Vue JS Framework with state management Pinia.
+This is a tiny project to recreate a game I created during my college studies. My final Java test required me to create a game. I chose to rebuild this game utilizing web technologies and the Vue JS Framework with Pinia state management.
 
 ## Game Preview
 
