@@ -1,6 +1,11 @@
 # sebastian-boy2022
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a small project of recreating the game I developed during my undergraduate years. My final exam for Java was to built a game.
+I decided to recreate this game using web technologies and using Vue JS Framework with state management Pinia.
+
+## Game Preview
+
+<img src="https://github.com/hector-light-blazor/Sebastian-boy/blob/master/animations/AnimationGamePreview.gif?raw=true" />
 
 ## Recommended IDE Setup
 
