@@ -10,6 +10,10 @@ export const useBulletsStore = defineStore({
     GetBullets: (state) => state._bullets
   },
   actions: {
+    GetBull(){
+      
+      return [...this._bullets];
+    },
     DrawBullets(x, y, size) {
         var found = false;
         //3.) Create a Bullet Graphics...

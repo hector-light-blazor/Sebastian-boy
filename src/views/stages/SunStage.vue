@@ -4,16 +4,32 @@
     import { usePlayerStore } from '@/stores/player'
     import { useBulletsStore } from '@/stores/bullets'
     import { useEngineStore } from '@/stores/engine'
-import { PlaneGeometry } from "pixi.js"
-    
   
-    //make keys reactive and
-    const keyboard = reactive({ keys: {}})
 
+    let holdBullets = [];
+    let Enemies = [];
+
+    //make keys reactive and
+    const keyboard = reactive({ keys: {}, data: ""})
+    
+    const worker = new Worker(new URL('./worker.js', import.meta.url))
+
+    worker.onmessage = (e) => {
+        
+        var data = e.data;
+        for(var i = 0; i < data.length; i++){
+            var hBullet = bullets.GetBullets[data[i].indexB];
+            var hEnemy = player.GetEnemies[data[i].indexE];
+            app.GetApplication.stage.removeChild(hBullet);
+            app.GetApplication.stage.removeChild(hEnemy);
+            bullets.GetBullets.splice(data[i].indexB, 1);
+            player.GetEnemies.splice(data[i].indexE, 1);
+        }
+        
+    }
 
     const app = useEngineStore()
-    app.SetupEngine();
-   
+    
 
     const background = useBackgroundStore()
 
@@ -119,72 +135,72 @@ import { PlaneGeometry } from "pixi.js"
           
                 if (elapsed > fpsInterval) {
 
-
-
+                            //Test worker to send bullets..
+                           // let HoldBullets = bullets.GetBullets
+                            //console.log("WITH OUT WORKER", bullets.GetBull());
+                            // if(bullets.GetBullets.length > 0){
+                            //     worker.postMessage(bullets.GetBullets);
+                            // }
+                            holdBullets = [];
+                            Enemies = [];
 
                             // Change the last bullet to the beginning
                             for(var b=bullets.GetBullets.length-1;b>=0;b--){
                                 bullets.GetBullets[b].position.y -= PLAYER_DIRECTION;
                                 var holdBullet = bullets.GetBullets[b];
-
+                                holdBullets.push({
+                                    bounds: holdBullet.getBounds().clone(),
+                                    index: b
+                                });
                                 //Check if that current bullet intersected with a enemyDirection
-                                 for(var i = 0; i < player.GetEnemies.length; i++){
-                                        var holdEnemy = player.GetEnemies[i];
+                                //  for(var i = 0; i < player.GetEnemies.length; i++){
+                                //         var holdEnemy = player.GetEnemies[i];
 
-                                        if(bullets.rectIntersect(holdBullet.getBounds(), holdEnemy.getBounds())){
-                                            app.GetApplication.stage.removeChild(holdEnemy);
-                                            app.GetApplication.stage.removeChild(holdBullet);
-                                            bullets.GetBullets.splice(b, 1);
-                                            player.GetEnemies.splice(i, 1);
-                                            break;
-                                        }
-                                }
+                                //         if(bullets.rectIntersect(holdBullet.getBounds(), holdEnemy.getBounds())){
+                                //             app.GetApplication.stage.removeChild(holdEnemy);
+                                //             app.GetApplication.stage.removeChild(holdBullet);
+                                //             bullets.GetBullets.splice(b, 1);
+                                //             player.GetEnemies.splice(i, 1);
+                                //             break;
+                                //         }
+                                // }
 
                           }
+
+                          
 
 
                               
                             // Put your drawing code here
                             for(var i = 0; i < player.GetEnemies.length; i++){
                                 player.GetEnemies[i].position.y += PLAYER_DIRECTION;
-    
-                                //Check if the enemy hit the player..
                                 var holdEnemy = player.GetEnemies[i];
-                                if(player.rectIntersect(holdEnemy)){
-                                    app.GetApplication.stage.removeChild(holdEnemy);
-                                    player.GetEnemies.splice(i, 1);
-                                    player.takeHeart();
-                                }else if(!app.GetApplication.screen.contains(holdEnemy.position.x, 
-                               holdEnemy.position.y) && holdEnemy.position.y > 500){
-                                    console.log("The enemy is not in the square")
-                                    app.GetApplication.stage.removeChild(holdEnemy);
-                                    player.GetEnemies.splice(i, 1);
-                                }
+
+                                Enemies.push({
+                                    bounds: holdEnemy.getBounds().clone(),
+                                    index: i
+                                });
+                                //Check if the enemy hit the player..
+                            //     var holdEnemy = player.GetEnemies[i];
+                            //     if(player.rectIntersect(holdEnemy)){
+                            //         app.GetApplication.stage.removeChild(holdEnemy);
+                            //         player.GetEnemies.splice(i, 1);
+                            //         player.takeHeart();
+                            //     }else if(!app.GetApplication.screen.contains(holdEnemy.position.x, 
+                            //    holdEnemy.position.y) && holdEnemy.position.y > 500){
+                            //         console.log("The enemy is not in the square")
+                            //         app.GetApplication.stage.removeChild(holdEnemy);
+                            //         player.GetEnemies.splice(i, 1);
+                            //     }
                             }
                               
+                            if(holdBullets.length > 0 && Enemies.length > 0){
+                                
+                                 worker.postMessage({be: true, bullets: holdBullets, enemy: Enemies });
+                            }
 
-
-                            //TODO: Figure out the probably of removing bullets..
-                            // // Remove Graphics when out of stage..
-                            // for( var i = 0; i < bullets.GetBullets.length; i++){ 
-                                //     if (!app.screen.contains(bullets.GetBullets[i].position.x, bullets.GetBullets[i].position.y)){
-                                    //         app.stage.removeChild(bullets.GetBullets[i]);
-                            //         bullets.GetBullets.splice(i, 1); 
-                            //     }
-                            // }
-                     
-                // if(player.GetEnemies.length > 0){
-                //     //console.log("there is enemies to work with");
-                //     // if enough time has elapsed, draw the next frame
         
-        
-                     
-        
-        
-                //     }
-
-                       // Get ready for next frame by setting then=now, but also adjust for your
-                        // specified fpsInterval not being a multiple of RAF's interval (16.7ms)
+    
                         then = now - (elapsed % fpsInterval);
             }
             app.GetApplication.render(app.GetApplication.stage);
@@ -195,12 +211,17 @@ import { PlaneGeometry } from "pixi.js"
         then = Date.now();
         startTime = then;
 
-         // start animating
-         animate();  
+         
 
 
     onMounted(() => {
+        app.SetupEngine();
+   
         document.querySelector("#map").appendChild(app.GetApplication.view);
+       
+        // start animating
+         animate();  
+       
         player.SetupSize(app.GetApplication);
         player.SetupPlanet(app.GetApplication)
 
@@ -237,21 +258,26 @@ import { PlaneGeometry } from "pixi.js"
 <style scoped>
 
 ul{
-    position: absolute;
-    left: 0;
-    z-index: 9999;
     list-style-type:none;
     padding: 0;
 }
 ul > li{
     float: left;
 }
+.heart-holder{
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 3em;
+    z-index: 9999;
+}
 </style>
 
 <template>
   <div style="position: relative;text-align: center; border: 1px solid red; 
   display: flex; justify-content: center;  align-items: center; height: 100vh;">
-        <div>
+        
+        <div class="heart-holder">
             <ul>
                 <li v-for="heart in player.GetLife" :key="heart" >
                     {{heart}}
