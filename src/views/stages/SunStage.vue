@@ -5,27 +5,40 @@
     import { useBulletsStore } from '@/stores/bullets'
     import { useEngineStore } from '@/stores/engine'
   
-
+    //Global Temporary array..
     let holdBullets = [];
     let Enemies = [];
 
     //make keys reactive and
     const keyboard = reactive({ keys: {}, data: ""})
     
+    //Create worker for processing game intersection with player and enemy...
     const worker = new Worker(new URL('./worker.js', import.meta.url))
 
+    //Receive message of the worker..
     worker.onmessage = (e) => {
         
         var data = e.data;
         for(var i = 0; i < data.length; i++){
-            var hBullet = bullets.GetBullets[data[i].indexB];
-            var hEnemy = player.GetEnemies[data[i].indexE];
-            app.GetApplication.stage.removeChild(hBullet);
-            app.GetApplication.stage.removeChild(hEnemy);
-            bullets.GetBullets.splice(data[i].indexB, 1);
-            player.GetEnemies.splice(data[i].indexE, 1);
-        }
-        
+            var hBullet = null;
+            var hEnemy = null;
+            if(data[i].indexB != -1 && data[i].indexE != -1){
+                hBullet = bullets.GetBullets[data[i].indexB];
+                hEnemy = player.GetEnemies[data[i].indexE];
+                app.GetApplication.stage.removeChild(hBullet);
+                app.GetApplication.stage.removeChild(hEnemy);
+                bullets.GetBullets.splice(data[i].indexB, 1);
+                player.GetEnemies.splice(data[i].indexE, 1);
+            }else if(data[i].indexB == -1){
+                hEnemy = player.GetEnemies[data[i].indexE];
+                app.GetApplication.stage.removeChild(hEnemy);
+                player.GetEnemies.splice(data[i].indexE, 1);
+            }else if(data[i].indexE == -1){
+                hBullet = bullets.GetBullets[data[i].indexB];
+                app.GetApplication.stage.removeChild(hBullet);
+                bullets.GetBullets.splice(data[i].indexB, 1);
+            }   
+        } 
     }
 
     const app = useEngineStore()
@@ -37,12 +50,13 @@
     const player = usePlayerStore()
     
     //Setup Size of the player hearts..
-    player.SetupHearts(10)
+    player.SetupHearts(20)
 
 
     const bullets = useBulletsStore()
 
     //GLOBAL VARIABLES...
+    //TODO: Move them to player store..
     const PLAYER_DIRECTION = 5;
     const ENEMY_DIRECTION = 2;
     const KEY_UP = 38;
@@ -105,8 +119,9 @@
                     let response =  bullets.DrawBullets(player.GetPlayer.x, player.GetPlayer.y - player.GetPlayer.height, 8);
 
                     if(response != null){
-                        app.GetApplication.stage.addChild(response)
+                            app.GetApplication.stage.addChild(response)
                     }
+                    
                 }
             }
             
@@ -141,30 +156,21 @@
                             // if(bullets.GetBullets.length > 0){
                             //     worker.postMessage(bullets.GetBullets);
                             // }
+                            //Reset variables
                             holdBullets = [];
                             Enemies = [];
 
-                            // Change the last bullet to the beginning
-                            for(var b=bullets.GetBullets.length-1;b>=0;b--){
-                                bullets.GetBullets[b].position.y -= PLAYER_DIRECTION;
-                                var holdBullet = bullets.GetBullets[b];
+                            // This loop will move the bullets upward
+                            for(var i = 0; i < bullets.GetBullets.length; i++){
+                                bullets.GetBullets[i].position.y -= PLAYER_DIRECTION;
+
+                                var holdBullet = bullets.GetBullets[i];
+
+                                //We will hold the bullet to send for process by the worker..
                                 holdBullets.push({
                                     bounds: holdBullet.getBounds().clone(),
-                                    index: b
+                                    index: i
                                 });
-                                //Check if that current bullet intersected with a enemyDirection
-                                //  for(var i = 0; i < player.GetEnemies.length; i++){
-                                //         var holdEnemy = player.GetEnemies[i];
-
-                                //         if(bullets.rectIntersect(holdBullet.getBounds(), holdEnemy.getBounds())){
-                                //             app.GetApplication.stage.removeChild(holdEnemy);
-                                //             app.GetApplication.stage.removeChild(holdBullet);
-                                //             bullets.GetBullets.splice(b, 1);
-                                //             player.GetEnemies.splice(i, 1);
-                                //             break;
-                                //         }
-                                // }
-
                           }
 
                           
@@ -172,6 +178,7 @@
 
                               
                             // Put your drawing code here
+                           
                             for(var i = 0; i < player.GetEnemies.length; i++){
                                 player.GetEnemies[i].position.y += PLAYER_DIRECTION;
                                 var holdEnemy = player.GetEnemies[i];
@@ -180,23 +187,15 @@
                                     bounds: holdEnemy.getBounds().clone(),
                                     index: i
                                 });
-                                //Check if the enemy hit the player..
-                            //     var holdEnemy = player.GetEnemies[i];
-                            //     if(player.rectIntersect(holdEnemy)){
-                            //         app.GetApplication.stage.removeChild(holdEnemy);
-                            //         player.GetEnemies.splice(i, 1);
-                            //         player.takeHeart();
-                            //     }else if(!app.GetApplication.screen.contains(holdEnemy.position.x, 
-                            //    holdEnemy.position.y) && holdEnemy.position.y > 500){
-                            //         console.log("The enemy is not in the square")
-                            //         app.GetApplication.stage.removeChild(holdEnemy);
-                            //         player.GetEnemies.splice(i, 1);
-                            //     }
                             }
                               
                             if(holdBullets.length > 0 && Enemies.length > 0){
                                 
-                                 worker.postMessage({be: true, bullets: holdBullets, enemy: Enemies });
+                                 worker.postMessage({be: true, 
+                                 bullets: holdBullets, 
+                                 enemy: Enemies,
+                                 screen: app.GetApplication.screen.clone()
+                                 });
                             }
 
         
@@ -228,7 +227,7 @@
         //Setup background full size;;
         background.Setup(app.GetApplication);
         //Setup Enemies for this stage..
-        player.SetupEnimies(30, app.GetApplication.screen.width);
+        player.SetupEnimies(20, app.GetApplication.screen.width);
         app.GetApplication.stage.addChild(background.GetBackGround);
 
         app.GetApplication.stage.addChild(player.GetPlayer);

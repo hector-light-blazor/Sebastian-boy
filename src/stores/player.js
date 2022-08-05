@@ -47,13 +47,14 @@ export const usePlayerStore = defineStore({
 
     },
     SetupEnimies(size, appWidth){
+      console.log(appWidth)
       for(var i = 0; i < size; i++){
         var texture = new PIXI.Sprite.from(astone);
        
         texture.anchor.set(0.5, 0.5)
         texture.width  = this._enemySize;
         texture.height = this._enemySize;
-        texture.x = Math.floor(Math.random() * appWidth);
+        texture.x = Math.floor(Math.random() * (appWidth - 300) + 20);
         texture.y = -(Math.floor(Math.random() * appWidth));
         this.enemies.push(texture);
       }

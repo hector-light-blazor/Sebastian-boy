@@ -16,6 +16,31 @@ self.addEventListener('message', e => {
         var bullets = data.bullets;
         var enemies = data.enemy;
         var response = [];
+       
+       
+        for(var i = 0; i < bullets.length; i++){
+            if(!rectIntersect(bullets[i].bounds, data.screen)){
+                bullets.splice(i, 1);
+                response.push({
+                    indexB: i,
+                    indexE: -1
+                });
+            }
+        }
+        
+        //Loop through enemies if any is outside the screen containers.
+        //add to remove list..
+        for(var i = 0; i < enemies.length; i++){
+            if(!rectIntersect(enemies[i].bounds, data.screen)){
+                enemies.splice(i, 1);
+                response.push({
+                    indexB: -1,
+                    indexE: i
+                });
+            }
+        }
+
+        //Loop bullets and collision with enemies..
         for(var i = 0; i < bullets.length; i++){
             for(var x = 0; x < enemies.length; x++){
                 if(rectIntersect(bullets[i].bounds, enemies[x].bounds)){
@@ -25,10 +50,8 @@ self.addEventListener('message', e => {
                     });
                     break;
                 }
-
             }
         }
-
         //Send Back to the main thread..
         postMessage(response);
     }
