@@ -273,6 +273,10 @@ ul > li{
     top: 0;
     font-size: 3em;
     z-index: 9999;
+    color: white;
+}
+h2{
+    text-align: start;
 }
 </style>
 
@@ -281,7 +285,7 @@ ul > li{
   display: flex; justify-content: center;  align-items: center; height: 100vh;">
         
         <div class="heart-holder">
-            Player Health:
+            <h2>Player Health:</h2>
             <ul>
                 <li v-for="heart in player.GetLife" :key="heart" >
                     {{heart}}
