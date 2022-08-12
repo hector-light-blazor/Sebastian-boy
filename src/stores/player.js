@@ -80,8 +80,7 @@ export const usePlayerStore = defineStore({
       }
    },
    rectIntersect(aBounds, bBounds){
-     console.log(aBounds);
-     console.log(bBounds);
+    
      let aBox = aBounds;
      let bBox = bBounds;
      return aBox.x + aBox.width > bBox.x &&

@@ -18,14 +18,14 @@ export const useEngineStore = defineStore({
             // Ex. if the ration is 2. What ever you set the width will be multiplied by 2.
             // Divindig the innnerWidth of the window will ensure to give you the correct width ratio.
 
-            const widthRatio = window.innerWidth / devicePixelRatio;
-            const heightRatio = window.innerHeight / devicePixelRatio;
+            const widthRatio = window.innerWidth / 2;
+            const heightRatio = window.innerHeight / 2;
            
             this._application = new PIXI.Application({
               autoResize: true,
               width: widthRatio,
               height: heightRatio,
-              resolution: devicePixelRatio
+              resolution: 2
             });
     }
   }
