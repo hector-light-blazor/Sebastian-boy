@@ -2,6 +2,10 @@
 
 This is a tiny project to recreate a game I created during my college studies. My final Java test required me to create a game. I chose to rebuild this game utilizing web technologies and the Vue JS Framework with Pinia state management.
 
+## Game Link
+This game is still work in progress. I used netlify to deploy the web game the purpose of showing casing my work.
+Link <a href="https://sebastian-boy.netlify.app">Preview</a>
+
 ## Game Preview
 
 <img src="https://github.com/hector-light-blazor/Sebastian-boy/blob/master/animations/AnimationGamePreview.gif?raw=true" />
