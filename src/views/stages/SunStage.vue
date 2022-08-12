@@ -50,7 +50,7 @@
     const player = usePlayerStore()
     
     //Setup Size of the player hearts..
-    player.SetupHearts(20)
+    player.SetupHearts(10)
 
 
     const bullets = useBulletsStore()
@@ -87,26 +87,30 @@
         if(keyboard.keys[KEY_UP]){
             
             if(app.GetApplication.screen.contains(player.GetPlayer.x, 
-                    (player.GetPlayer.y - PLAYER_DIRECTION))){
+                    (player.GetPlayer.y - PLAYER_DIRECTION)) && !player.rectIntersect(player.GetPlayer.getBounds(),
+                            player.GetPlanet.getBounds())){
                         
                         player.GetPlayer.y -= PLAYER_DIRECTION
                 }
             }else if(keyboard.keys[KEY_DOWN]){
                 if(app.GetApplication.screen.contains(player.GetPlayer.x, 
-                    (player.GetPlayer.y + PLAYER_DIRECTION))){
+                    (player.GetPlayer.y + PLAYER_DIRECTION)) && !player.rectIntersect(player.GetPlayer.getBounds(),
+                            player.GetPlanet.getBounds())){
                         player.GetPlayer.y += PLAYER_DIRECTION
                    
                 }
             }
             else if(keyboard.keys[KEY_LEFT]){
                 if(app.GetApplication.screen.contains((player.GetPlayer.x - PLAYER_DIRECTION), 
-                    player.GetPlayer.y)){
+                    player.GetPlayer.y && !player.rectIntersect(player.GetPlayer.getBounds(),
+                            player.GetPlanet.getBounds()))){
                         player.GetPlayer.x -= PLAYER_DIRECTION
                 }
             }
             else if(keyboard.keys[KEY.RIGHT_ARROW]){
                 if(app.GetApplication.screen.contains((player.GetPlayer.x + PLAYER_DIRECTION), 
-                    player.GetPlayer.y)){
+                    player.GetPlayer.y) && !player.rectIntersect(player.GetPlayer.getBounds(),
+                            player.GetPlanet.getBounds())){
                         player.GetPlayer.x += PLAYER_DIRECTION
                 
                 }

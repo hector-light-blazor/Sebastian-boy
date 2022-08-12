@@ -32,8 +32,8 @@ export const usePlayerStore = defineStore({
 
        // Configuration:
        // X AND Y Position: Move the Ship to center below...
-       this.player.x = app.screen.width / 2;
-       this.player.y = app.screen.height - (this.player.height + 80);
+       this.player.x = this._playerSize;
+       this.player.y = app.screen.height - this._playerSize;
     },
     SetupPlanet(app){
        this.planet.anchor.set(0.5, 0.5);
@@ -46,16 +46,17 @@ export const usePlayerStore = defineStore({
        this.planet.y = app.screen.height - (this.planet.height - 15);
 
     },
+
+    //TODO: Ensure that enemies don't overlap..
     SetupEnimies(size, appWidth){
-      console.log(appWidth)
+     
       for(var i = 0; i < size; i++){
         var texture = new PIXI.Sprite.from(astone);
-       
-        texture.anchor.set(0.5, 0.5)
+        
         texture.width  = this._enemySize;
         texture.height = this._enemySize;
         texture.x = Math.floor(Math.random() * (appWidth - 300) + 20);
-        texture.y = -(Math.floor(Math.random() * appWidth));
+        texture.y = -(Math.floor(Math.random() * appWidth));;
         this.enemies.push(texture);
       }
     },
@@ -78,9 +79,11 @@ export const usePlayerStore = defineStore({
         stage.addChild(this.enemies[i])
       }
    },
-   rectIntersect(enemy){
-     let aBox = enemy.getBounds();
-     let bBox = this.player.getBounds();
+   rectIntersect(aBounds, bBounds){
+     console.log(aBounds);
+     console.log(bBounds);
+     let aBox = aBounds;
+     let bBox = bBounds;
      return aBox.x + aBox.width > bBox.x &&
             aBox.x < bBox.x + bBox.width &&
             aBox.y + aBox.height > bBox.y &&

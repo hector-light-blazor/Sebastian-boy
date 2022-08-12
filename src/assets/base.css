@@ -70,7 +70,6 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
 }
 
 body {
@@ -78,6 +77,4 @@ body {
   padding:0;
   overflow:hidden;
 }
-canvas {
-  object-fit: cover
-}
+
