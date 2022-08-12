@@ -231,7 +231,7 @@
         //Setup background full size;;
         background.Setup(app.GetApplication);
         //Setup Enemies for this stage..
-        player.SetupEnimies(20, app.GetApplication.screen.width);
+        player.SetupEnimies(40, app.GetApplication.screen.width);
         app.GetApplication.stage.addChild(background.GetBackGround);
 
         app.GetApplication.stage.addChild(player.GetPlayer);
