@@ -16,7 +16,7 @@ This game is still work in progress. I used netlify to deploy the web game the p
 Link <a href="https://sebastian-boy.netlify.app">Preview</a>
 
 ## Game Preview
-
+<img src="https://github.com/hector-light-blazor/Sebastian-boy/blob/master/animations/AnimationGamePreview.gif?raw=true" alt="AnimationGamePreview.gif">
 <img src="https://github.com/hector-light-blazor/Sebastian-boy/blob/master/animations/AnimationGamePreview.gif?raw=true" />
 
 ## Recommended IDE Setup
